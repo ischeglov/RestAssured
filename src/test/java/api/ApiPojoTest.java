@@ -130,5 +130,26 @@ public class ApiPojoTest {
         Assertions.assertEquals("Missing password", unSuccessfulRegistration.getError());
     }
 
+    /**
+     * Тест-кейс №4
+     * 1. Используя сервис https://reqres.in/ убедиться, что операция LIST<RESOURCE> возвращает данные, отсортированные по годам
+     */
 
+    @Test
+    @DisplayName("Сортировка по годам")
+    public void sortByYearTest() {
+        Specification.initialSpecification(Specification.requestSpecification(URL),
+                Specification.responseSpecificationStatusOK());
+
+        List<DataByYear> years = given()
+                .when()
+                .get("api/unknown")
+                .then().log().all()
+                .extract().body().jsonPath().getList("data", DataByYear.class);
+
+        List<Integer> listYears = years.stream().map(DataByYear::getYear).collect(Collectors.toList());
+        List<Integer> sortedListYears = listYears.stream().sorted().collect(Collectors.toList());
+
+        Assertions.assertEquals(sortedListYears, listYears);
+    }
 }
