@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testImplementation 'com.codeborne:selenide:6.19.0'
+    testImplementation 'io.rest-assured:rest-assured:4.4.0'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+}
+
+test {
+    useJUnitPlatform()
+}
