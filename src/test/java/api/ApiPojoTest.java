@@ -1,9 +1,18 @@
 package api;
 
+import api.colors.DataByYear;
+import api.registration.SuccessfulRegistration;
+import api.registration.UnSuccessfulRegistration;
+import api.registration.UserRegistration;
+import api.specification.Specification;
+import api.users.UserData;
+import api.users.UserTime;
+import api.users.UserTimeResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -151,5 +160,48 @@ public class ApiPojoTest {
         List<Integer> sortedListYears = listYears.stream().sorted().collect(Collectors.toList());
 
         Assertions.assertEquals(sortedListYears, listYears);
+    }
+
+    /**
+     * Тест-кейс №5
+     * 1. Используя сервис https://reqres.in/ удалить второго пользователя и сравнить статус код
+     */
+
+    @Test
+    @DisplayName("Удаление пользователя")
+    public void deleteUserTest() {
+        Specification.initialSpecification(Specification.requestSpecification(URL),
+                Specification.responseSpecificationStatusNoContent());
+
+        given()
+                .when()
+                .delete("api/users/2")
+                .then().log().all();
+    }
+
+    /**
+     * Тест-кейс №6
+     * 1. Используя сервис https://reqres.in/ обновить информацию о пользователе и сравнить дату обновления с текущей датой на ПК
+     */
+
+    @Test
+    @DisplayName("Сравнение времени ПК и сервера")
+    // тест плавающий, могут быть погрешности
+    public void checkPcAndServerDateTest() {
+        Specification.initialSpecification(Specification.requestSpecification(URL),
+                Specification.responseSpecificationStatusOK());
+
+        UserTime userTime = new UserTime("morpheus", "zion resident");
+        UserTimeResponse response = given()
+                .body(userTime)
+                .when()
+                .put("api/users/2")
+                .then().log().all()
+                .extract().as(UserTimeResponse.class);
+
+        String regex = "(.{5})$";
+        String currentTime = Clock.systemUTC().instant().toString().replaceAll(regex, "");
+
+        Assertions.assertEquals(currentTime, response.getUpdatedAt().replaceAll(regex, ""));
     }
 }

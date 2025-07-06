@@ -1,4 +1,4 @@
-package api;
+package api.specification;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -28,6 +28,11 @@ public class Specification {
                 .build();
     }
 
+    public static ResponseSpecification responseSpecificationStatusNoContent() {
+        return new ResponseSpecBuilder()
+                .expectStatusCode(204)
+                .build();
+    }
 
     public static void initialSpecification(RequestSpecification request, ResponseSpecification response) {
         RestAssured.requestSpecification = request;

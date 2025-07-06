@@ -1,4 +1,4 @@
-package api;
+package api.colors;
 
 public class DataByYear {
 
